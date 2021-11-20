@@ -15,6 +15,8 @@ class _CreateTodoDialogState extends State<CreateTodoDialog> {
   String name = '';
   DateTime date = DateTime.now();
   TimeOfDay time = TimeOfDay.now();
+  bool isEmpty = false;
+  bool isBeforeNow = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,36 +24,47 @@ class _CreateTodoDialogState extends State<CreateTodoDialog> {
       child: Container(
         padding: const EdgeInsets.all(12),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Create a new todo task',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            const Center(
+              child: Text(
+                'Create a new todo task',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
             ),
             const SizedBox(
               height: 20,
             ),
+            const Text(
+              'Name',
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
             TextField(
-              decoration: const InputDecoration(
-                filled: true,
-                labelText: 'Name',
-              ),
+              decoration: InputDecoration(
+                  filled: true, errorText: isEmpty ? 'Enter a name' : null),
               onChanged: (value) => setState(() {
                 name = value;
               }),
             ),
             const SizedBox(
-              height: 8,
+              height: 16,
+            ),
+            const Text(
+              'Deadline',
+              style: TextStyle(fontWeight: FontWeight.w500),
             ),
             Row(
               children: [
                 Expanded(
                   child: TextField(
-                    enabled: false,
+                    readOnly: true,
                     decoration: InputDecoration(
-                      filled: true,
-                      labelText: utils.formatDate(date),
-                    ),
+                        filled: true,
+                        hintText: utils.formatDate(date),
+                        errorText: isBeforeNow
+                            ? 'Deadline must be greater present'
+                            : null),
                   ),
                 ),
                 IconButton(
@@ -66,11 +79,11 @@ class _CreateTodoDialogState extends State<CreateTodoDialog> {
               children: [
                 Expanded(
                   child: TextField(
-                    enabled: false,
+                    readOnly: true,
                     decoration: InputDecoration(
-                      filled: true,
-                      labelText: utils.formatTime(time),
-                    ),
+                        filled: true,
+                        hintText: utils.formatTime(time),
+                        errorText: isBeforeNow ? '' : null),
                   ),
                 ),
                 IconButton(
@@ -89,8 +102,30 @@ class _CreateTodoDialogState extends State<CreateTodoDialog> {
                     child: const Text('Cancel')),
                 MaterialButton(
                   onPressed: () {
+                    if (name == '') {
+                      setState(() {
+                        isEmpty = true;
+                      });
+                      return;
+                    } else {
+                      setState(() {
+                        isEmpty = false;
+                      });
+                    }
+
                     DateTime deadline = DateTime(date.year, date.month,
                         date.day, time.hour, time.minute);
+
+                    if (deadline.isBefore(DateTime.now())) {
+                      setState(() {
+                        isBeforeNow = true;
+                      });
+                      return;
+                    } else {
+                      setState(() {
+                        isBeforeNow = true;
+                      });
+                    }
 
                     Todo todo = Todo(name, deadline, false);
                     widget.onPressConfirm(todo);

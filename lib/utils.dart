@@ -5,5 +5,9 @@ String formatDate(DateTime date) {
 }
 
 String formatTime(TimeOfDay time) {
-  return '${time.hour}:${time.minute}';
+  return '${time.hour}:${time.minute.toString().padLeft(2, '0')}';
+}
+
+String formatDateTime(DateTime dateTime) {
+  return '${dateTime.hour}:${dateTime.minute} - ${dateTime.day}/${dateTime.month}/${dateTime.year}';
 }

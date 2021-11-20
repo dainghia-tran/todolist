@@ -33,9 +33,12 @@ class _TodoItemState extends State<TodoItem> {
   Widget build(BuildContext context) {
     final isComing =
         (widget.todo.deadline.difference(DateTime.now()).inSeconds) < 900;
+    final isPassed = widget.todo.deadline.isBefore(DateTime.now());
     final color = widget.todo.isCompleted
         ? Colors.lightGreen
-        : (isComing ? Colors.amber : Colors.cyan.shade100);
+        : (isPassed
+            ? Colors.grey
+            : (isComing ? Colors.amber : Colors.cyan.shade100));
 
     final contentColor = widget.todo.isCompleted ? Colors.white : Colors.black;
 

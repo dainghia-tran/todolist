@@ -130,6 +130,7 @@ class _CreateTodoDialogState extends State<CreateTodoDialog> {
                     Todo todo = Todo(name, deadline, false);
                     widget.onPressConfirm(todo);
                     Navigator.of(context).pop();
+                    FocusScope.of(context).requestFocus(FocusNode());
                   },
                   elevation: 0,
                   color: Color(Colors.blue.value),

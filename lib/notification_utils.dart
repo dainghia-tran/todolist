@@ -23,10 +23,10 @@ class NotificationUtils {
     final diff = deadline.difference(DateTime.now()).inMinutes;
     await flutterLocalNotificationsPlugin.zonedSchedule(
       (deadline.millisecondsSinceEpoch / 1000).round(),
-      'Deadline is comming in $diff minutes',
+      'Deadline is comming in ${diff >= 10 ? 10 : diff} minutes',
       '$name is due at ${utils.formatDateTime(deadline)}',
       tz.TZDateTime.from(
-          deadline.subtract(Duration(minutes: diff > 10 ? 10 : diff)),
+          deadline.subtract(Duration(minutes: diff >= 10 ? 10 : diff)),
           tz.getLocation('Asia/Bangkok')),
       await _notificationDetails(),
       payload: 'Default_Sound',
